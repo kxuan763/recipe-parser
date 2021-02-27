@@ -4,6 +4,7 @@ import nltk
 ALL_TOOLS = ['pot', 'pan', 'dish', 'grater', 'knife', 'cutting board', 'rolling pin', 'skillet', 'griddle', 'blender', 'baking dish', 'sifter', 'strainer', 'mallet', 'bowl', 'oven', 'stove', 'cookie sheet', 'baking sheet', 'masher', 'beater', 'casserole dish', 'wok', 'waffle iron', 'ladle']
 ALL_METHODS = ['bake', 'saute', 'fry', 'boil', 'broil', 'chop', 'cut', 'mash', 'blend', 'tenderize']
 TIME_WORDS = ['minute', 'minutes', 'second', 'seconds', 'hour', 'hours']
+# add ingredients too
 
 
 # parse_step(str:text) -> tools:listof str, methods:listof str, times: listof str
