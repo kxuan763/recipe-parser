@@ -28,14 +28,17 @@ def extract_text(url):
     
     return(name, list_i, list_d)
 
-# Lists of tools and methods to look for in text
-ALL_TOOLS = ['whisk', 'pot', 'pan', 'dish', 'grater', 'knife', 'board', 'pin', 'skillet', 'griddle', 'blender', 'dish', 'sifter', 'strainer', 'mallet', 'bowl', 'oven', 'stove', 'sheet', 'masher', 'beater', 'wok', 'iron', 'ladle']
+# Corpora
+ALL_TOOLS = ['grill', 'whisk', 'pot', 'pan', 'dish', 'grater', 'knife', 'board', 'pin', 'skillet', 'griddle', 'blender', 'dish', 'sifter', 'strainer', 'mallet', 'bowl', 'oven', 'stove', 'sheet', 'masher', 'beater', 'wok', 'iron', 'ladle']
 SPEC_TOOLS = ['dish', 'pan', 'pin', 'sheet', 'iron', 'board']
 TOOL_PREF = ['baking', 'cookie', 'rolling', 'waffle', 'cutting']
-ALL_METHODS = ['whisk', 'press', 'bake', 'saute', 'preheat', 'fry', 'boil', 'broil', 'chop', 'cut', 'mash', 'blend', 'tenderize', 'heat', 'preheat']
+ALL_METHODS = ['refrigerate', 'toss', 'sprinkle', 'whisk', 'press', 'bake', 'saute', 'preheat', 'fry', 'boil', 'broil', 'chop', 'cut', 'mash', 'blend', 'tenderize', 'heat', 'preheat']
 TIME_WORDS = ['minute', 'minutes', 'second', 'seconds', 'hour', 'hours']
-MEATS = ['chicken', 'beef', 'steak', 'pork', 'ham']
-VEG_PROTEINS = ['tofu']
+MEATS = ['chicken', 'beef', 'steak', 'pork', 'ham', 'turkey', 'fish', 'tuna', 'salmon', 'cod']
+VEG_PROTEINS = ['tofu', 'beans', 'lentils', 'chickpeas']
+UNHEALTHY_ING = ['butter', 'sugar', 'salt', 'oil', 'cheese', 'dressing', 'ketchup', 'mayonnaise']
+
+fractiondict = {'½':0.5, '⅓':0.333, '⅔': 0.667, '¼':0.25, '¾':0.75, '⅝':0.625, '⅛':0.125, '⅜':0.375, '⅞':0.875, '1 ½':1.5}
 
 # regex all search conditions
 
@@ -89,9 +92,37 @@ def parse_step(text, ingredients):
     
     return step
 
+# make_veg takes a parsed recipe dict and returns 
+# a copy with meats replaced with tofu
+def make_veg(parsed_recipe):
+    recipe_copy = parsed_recipe.copy()
+    for step_no in recipe_copy.keys():
+        ingr = recipe_copy[step_no]['ingredients']
+        for j in range(len(ingr)):
+            if ingr[j] in MEATS:
+                ingr[j] = 'tofu'
+                    #print(ingr)
+    return recipe_copy
+
+# Same thing but other way around
+def make_unveg(parsed_recipe):
+    recipe_copy = parsed_recipe.copy()
+    for step_no in recipe_copy.keys():
+        ingr = recipe_copy[step_no]['ingredients']
+        for j in range(len(ingr)):
+            if ingr[j] in VEG_PROTEINS:
+                ingr[j] = 'chicken'
+    return recipe_copy
+
+
+
+
+
+
+
 # test_strings = ['Bake the fish in a pan for 30 minutes!', 'Bring 2 cups of water to a boil in a large pot for 4 hours', 'Fry the chicken in the largest pan you have']
 
-URL = 'https://www.allrecipes.com/recipe/241709/baked-tofu/'
+#URL = 'https://www.allrecipes.com/recipe/213068/grill-master-chicken-wings/?internalSource=hub%20recipe&referringContentType=Search'
 
 def parse_ingredient(ingredient):
     tokens = nltk.word_tokenize(ingredient)
@@ -101,8 +132,12 @@ def parse_ingredient(ingredient):
 # for test_string in test_strings:
 #     print(parse_step(test_string))
 recipe = extract_text(URL)
-print(recipe)
-print(parse_steps(recipe[2], recipe[1]))
+print('1 ½')
+# parsed_recipe = parse_steps(recipe[2], ['soy sauce','italian-style dressing','chicken','butter','hot pepper sauce'])
+# veg_recipe = make_veg(parsed_recipe)
+# unveg_recipe = make_unveg(veg_recipe)
+# print(veg_recipe,unveg_recipe)
+
 
 
 # VEGETARIAN SUBSTITUTION LOGIC, DO NOT DELETE
