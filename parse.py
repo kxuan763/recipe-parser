@@ -114,7 +114,8 @@ def make_unveg(parsed_recipe):
                 ingr[j] = 'chicken'
     return recipe_copy
 
-
+# For make healthy, cut quantities of unhealthy ingredients by 1/2
+# For make unhealthy, double such ingredients.
 
 
 
@@ -132,7 +133,6 @@ def parse_ingredient(ingredient):
 # for test_string in test_strings:
 #     print(parse_step(test_string))
 recipe = extract_text(URL)
-print('1 ½')
 # parsed_recipe = parse_steps(recipe[2], ['soy sauce','italian-style dressing','chicken','butter','hot pepper sauce'])
 # veg_recipe = make_veg(parsed_recipe)
 # unveg_recipe = make_unveg(veg_recipe)
