@@ -163,6 +163,9 @@ grain = ['barley', 'rice', 'buckwheat', 'bulgur', 'cornmeal', 'millet', 'oat', '
 misc = ['salt', 'black pepper', 'water', 'sugar', 'vinegar', ]
 sauces = ['ketchup', 'mustard', 'soy sauce']
 
+#todo: add sauces and other missing kitchen staples
+#todo: find preparation/descriptor words
+
 list_of_ingredients = beans_and_legumes + meat_and_poultry + wild_game + chocolate + oil + dairy + extracts + flours + fruit + herbs + spices + mushrooms + nuts_and_seeds + shellfish + vegetables + grain + misc
 
 
@@ -198,7 +201,7 @@ def parse_ingredient(ingredient):
             quantity += int(t)   
     if quantity == 0:
         quantity = ''  
-    return {match: [measure, quantity]}
+    return {match: [quantity, measure, '']}
 
 
 # ingredients structure: {ingredient name: [quantity, measurement, descriptors]}
