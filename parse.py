@@ -141,8 +141,30 @@ def make_unhealthy(ingredients):
 
 fractiondict = {'½':0.5, '⅓':0.333, '⅔': 0.667, '¼':0.25, '¾':0.75, '⅝':0.625, '⅛':0.125, '⅜':0.375, '⅞':0.875, '1 ½':1.5}
 
-list_of_ingredients = ['pineapple', 'bell pepper', 'carrot', 'onion', 'avocado','avocado oil', 'salt', 'pepper', 'chicken', 'water', 'cornstarch', 'brown sugar', 'rice vinegar', 'ketchup', 'soy sauce', 'chile-garlic sauce', 'ginger-garlic paste', 'white pepper']
+#list_of_ingredients = ['pineapple', 'bell pepper', 'carrot', 'onion', 'avocado','avocado oil', 'salt', 'pepper', 'chicken', 'water', 'cornstarch', 'brown sugar', 'rice vinegar', 'ketchup', 'soy sauce', 'chile-garlic sauce', 'ginger-garlic paste', 'white pepper']
 measures = ['tablespoon', 'teaspoon', 'pound', 'cup', 'ounce']
+
+beans_and_legumes = ['black bean', 'black-eyed pea', 'cannellini bean', 'chickpea', 'fava bean', 'great northern bean', 'kidney bean', 'lentil bean', 'lima bean', 'pinto bean', 'soybean', 'edamame', 'white bean']
+meat_and_poultry = ['beef', 'chicken', 'wild game', 'goat', 'ham', 'lamb', 'pork', 'sausage', 'turkey']
+wild_game = ['venison', 'elk', 'duck', 'goose', 'buffalo', 'bison', 'rabbit']
+chocolate = ['chocolate', 'cocoa']
+oil = ['coconut oil', 'olive oil', 'sesame oil', 'avocado oil', 'vegetable oil', 'canola oil', 'peanut oil']
+dairy = ['cheese', 'butter', 'buttermilk', 'sour cream', 'egg']
+extracts = ['vanilla extract', 'anise extract', 'peppermint extract', 'lemon extract', 'orange extract', 'butter extract', 'almond extract', 'maple extract', 'rum extract']
+flours = ['white rice flour', 'tapioca flour', 'chickpea flour', 'almond meal', 'coconut flour', 'brown rice flour', 'soy flour', 'corn flour', 'oat flour']
+fruit = ['apple', 'apricot', 'avocado', 'banana', 'berry', 'cranberry', 'blueberry', 'raspberry', 'strawberry', 'blackberry', 'cherry', 'citrus', 'lemon', 'orange', 'lime', 'grapefruit', 'coconut', 'dates', 'fig', 'fruit', 'grape', 'kiwi', 'mango', 'melon', 'watermelon', 'cantaloupe', 'honeydew', 'nectarine', 'papaya', 'peach', 'pear', 'persimmon', 'pineapple', 'plum', 'pomegranate', 'raisin', 'tamarind']
+herbs = ['basil', 'bay leaves', 'bay leaf' 'chervil', 'chives', 'cilantro', 'dill', 'lemongrass', 'marjoram', 'dill', 'lemongrass', 'marjoram', 'mint', 'oregano', 'parsley', 'rosemary', 'sage', 'savory', 'tarragon', 'thyme', 'lavender', 'rose']
+spices = ['allspice', 'anise', 'annatto', 'cajun', 'caraway', 'cardamom', 'celery seed', 'chili powder', 'cinnamon', 'cloves', 'coriander', 'cumin', 'curry', 'curry powder', 'fennel seed', 'fenugreek', 'garam masala', 'jerk spice', 'mace', 'mustard', 'nutmeg', 'paprika', 'pickling spice', 'poppy seed', 'cayenne pepper', 'saffron', 'sesame seed', 'turmeric', 'vanilla bean', 'white pepper', 'peppercorn', 'ginger', 'star anise']
+mushrooms = ['chanterelle mushroom', 'crimini mushroom', 'enoki mushroom', 'morel mushroom', 'oyster mushroom', 'porcini mushroom', 'portobello mushroom', 'shiitake mushroom']
+nuts_and_seeds = ['chia seed', 'peanut', 'peanut butter', 'pecan', 'almond', 'flax seed', 'walnut', 'amaranth']
+shellfish = ['clam', 'crab', 'crawfish', 'lobster', 'mussel', 'octopus', 'squid', 'oyster', 'scallop', 'shrimp']
+vegetables = ['artichoke', 'artichoke', 'asparagus', 'beet', 'bell pepper', 'bok choy', 'broccoli', 'brussels sprout', 'mushroom', 'green bean', 'corn', 'cucumber', 'eggplant', 'fennel', 'garlic', 'greens', 'green pea', 'pea', 'radish', 'rhubarb', 'sweet potato', 'tomato', 'tomatillo', 'nopales', 'turnip', 'snow pea', 'sugar snap pea', 'potato', 'squash', 'carrot', 'mixed vegetable', 'cauliflower', 'cabbage', 'leek', 'onion', 'parsnip', 'rutabaga', 'shallot', 'yam', 'water chestnut', 'jicama', 'okra', 'chile pepper', 'olive', 'celery root', 'celery']
+grain = ['barley', 'rice', 'buckwheat', 'bulgur', 'cornmeal', 'millet', 'oat', 'quinoa', 'spelt']
+misc = ['salt', 'black pepper', 'water', 'sugar', 'vinegar', ]
+sauces = ['ketchup', 'mustard', 'soy sauce']
+
+list_of_ingredients = beans_and_legumes + meat_and_poultry + wild_game + chocolate + oil + dairy + extracts + flours + fruit + herbs + spices + mushrooms + nuts_and_seeds + shellfish + vegetables + grain + misc
+
 
 # need to integrate into extract_text
 def parse_ingredients(ingredients):
@@ -150,8 +172,6 @@ def parse_ingredients(ingredients):
     for i in ingredients:
         list_ingredient.append(parse_ingredient(i))
     return list_ingredient
-=======
-URL = 'https://www.allrecipes.com/recipe/213068/grill-master-chicken-wings/?internalSource=hub%20recipe&referringContentType=Search'
 
 def parse_ingredient(ingredient):
     # ingredient name
@@ -175,14 +195,15 @@ def parse_ingredient(ingredient):
         if t in fractiondict:
             quantity += fractiondict[t]
         elif t.isnumeric():
-            quantity += int(t)     
+            quantity += int(t)   
+    if quantity == 0:
+        quantity = ''  
     return {match: [measure, quantity]}
 
 
 # ingredients structure: {ingredient name: [quantity, measurement, descriptors]}
-=======
     #tagged_tokens = nltk.pos_tag(tokens)
-    return tokens
+    #return tokens
 
 # TESTING
 # for test_string in test_strings:
@@ -197,18 +218,17 @@ p = load_page(URL)
 recipe = extract_text(p)
 print(recipe[1])
 print(parse_ingredients(recipe[1]))
-=======
-dummy_ing = {'pasta':[1,'cup',''],'chicken':[2,'breasts','chopped'], 'butter':[1,'tsp','melted'],'sugar':[3,'tsp',''], 'italian dressing':[3,'tsp','']}
+#dummy_ing = {'pasta':[1,'cup',''],'chicken':[2,'breasts','chopped'], 'butter':[1,'tsp','melted'],'sugar':[3,'tsp',''], 'italian dressing':[3,'tsp','']}
 # print(dummy_ing)
 # make_healthy(dummy_ing)
 # print(dummy_ing)
-recipe = extract_text(URL)
-parsed_recipe = parse_steps(recipe[2], ['soy sauce','italian-style dressing','chicken','butter','hot pepper sauce'])
-print(parsed_recipe)
-make_veg(parsed_recipe)
-print(parsed_recipe)
-make_unveg(parsed_recipe)
-print(parsed_recipe)
+#recipe = extract_text(URL)
+#parsed_recipe = parse_steps(recipe[2], ['soy sauce','italian-style dressing','chicken','butter','hot pepper sauce'])
+#print(parsed_recipe)
+#make_veg(parsed_recipe)
+#print(parsed_recipe)
+#make_unveg(parsed_recipe)
+#print(parsed_recipe)
 
 
 
