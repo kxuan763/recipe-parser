@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import nltk
+import re
 
 URL = 'https://www.allrecipes.com/recipe/17167/sicilian-spaghetti/'
 URL = 'https://www.allrecipes.com/recipe/279987/'
@@ -102,21 +103,35 @@ def parse_step(text, ingredients):
     return step
 
 # make_veg takes a parsed recipe dict and mutates it to replace meats with tofu
-def make_veg(parsed_recipe):
+def make_veg(ingredients, parsed_recipe):
     for step_no in parsed_recipe.keys():
         ingr = parsed_recipe[step_no]['ingredients']
         for j in range(len(ingr)):
             if any(MEAT in ingr[j] for MEAT in MEATS):
                 ingr[j] = 'tofu'
-                    #print(ingr)
+    keys_to_remove = []
+    for key in ingredients.keys():
+        if any(MEAT in key for MEAT in MEATS):
+            keys_to_remove.append(key)
+    for key in keys_to_remove:
+        value = ingredients.pop(key)
+        ingredients['tofu'] = value
+            
 
 # Same thing but other way around
-def make_unveg(parsed_recipe):
+def make_unveg(ingredients, parsed_recipe):
     for step_no in parsed_recipe.keys():
         ingr = parsed_recipe[step_no]['ingredients']
         for j in range(len(ingr)):
             if any(prot in ingr[j] for prot in VEG_PROTEINS):
                 ingr[j] = 'chicken'
+    keys_to_remove = []
+    for key in ingredients.keys():
+        if any(prot in key for prot in VEG_PROTEINS):
+            keys_to_remove.append(key)
+    for key in keys_to_remove:
+        value = ingredients.pop(key)
+        ingredients['chicken'] = value
 
 # For make healthy, cut quantities of unhealthy ingredients by 1/2
 # For make unhealthy, double such ingredients.
@@ -131,6 +146,39 @@ def make_unhealthy(ingredients):
         if any(unh in ingredient for unh in UNHEALTHY_ING):
             ingredients[ingredient][0] = ingredients[ingredient][0]*2
 
+# Mutator that multiplies quantites in ingredients by scale factor
+def scale_ingredient(ingredients, scale_factor):
+    for ingredient in ingredient.keys():
+        ingredients[ingredient][0] *= scale_factor
+
+def make_italian(ingredients, parsed_recipe):
+    for step_no in parsed_recipe.keys():
+        ingr = parsed_recipe[step_no]['ingredients']
+        for j in range(len(ingr)):
+            if any(carb in ingr[j] for carb in carbs):
+                ingr[j] = 'pasta'
+    keys_to_remove = []
+    for key in ingredients.keys():
+        if any(carb in ingr[j] for carb in carbs):
+            keys_to_remove.append(key)
+    for key in keys_to_remove:
+        value = ingredients.pop(key)
+        ingredients['pasta'] = value
+
+def make_chinese(ingredients, parsed_recipe):
+    for step_no in parsed_recipe.keys():
+        ingr = parsed_recipe[step_no]['ingredients']
+        for j in range(len(ingr)):
+            if any(carb in ingr[j] for carb in carbs):
+                ingr[j] = 'rice'
+    keys_to_remove = []
+    for key in ingredients.keys():
+        if any(carb in ingr[j] for carb in carbs):
+            keys_to_remove.append(key)
+    for key in keys_to_remove:
+        value = ingredients.pop(key)
+        ingredients['rice'] = value
+
 
 
 
@@ -143,7 +191,6 @@ fractiondict = {'½':0.5, '⅓':0.333, '⅔': 0.667, '¼':0.25, '¾':0.75, '⅝'
 
 #list_of_ingredients = ['pineapple', 'bell pepper', 'carrot', 'onion', 'avocado','avocado oil', 'salt', 'pepper', 'chicken', 'water', 'cornstarch', 'brown sugar', 'rice vinegar', 'ketchup', 'soy sauce', 'chile-garlic sauce', 'ginger-garlic paste', 'white pepper']
 measures = ['tablespoon', 'teaspoon', 'pound', 'cup', 'ounce']
-
 beans_and_legumes = ['black bean', 'black-eyed pea', 'cannellini bean', 'chickpea', 'fava bean', 'great northern bean', 'kidney bean', 'lentil bean', 'lima bean', 'pinto bean', 'soybean', 'edamame', 'white bean']
 meat_and_poultry = ['beef', 'chicken', 'wild game', 'goat', 'ham', 'lamb', 'pork', 'sausage', 'turkey']
 wild_game = ['venison', 'elk', 'duck', 'goose', 'buffalo', 'bison', 'rabbit']
@@ -160,6 +207,7 @@ nuts_and_seeds = ['chia seed', 'peanut', 'peanut butter', 'pecan', 'almond', 'fl
 shellfish = ['clam', 'crab', 'crawfish', 'lobster', 'mussel', 'octopus', 'squid', 'oyster', 'scallop', 'shrimp']
 vegetables = ['artichoke', 'artichoke', 'asparagus', 'beet', 'bell pepper', 'bok choy', 'broccoli', 'brussels sprout', 'mushroom', 'green bean', 'corn', 'cucumber', 'eggplant', 'fennel', 'garlic', 'greens', 'green pea', 'pea', 'radish', 'rhubarb', 'sweet potato', 'tomato', 'tomatillo', 'nopales', 'turnip', 'snow pea', 'sugar snap pea', 'potato', 'squash', 'carrot', 'mixed vegetable', 'cauliflower', 'cabbage', 'leek', 'onion', 'parsnip', 'rutabaga', 'shallot', 'yam', 'water chestnut', 'jicama', 'okra', 'chile pepper', 'olive', 'celery root', 'celery']
 grain = ['barley', 'rice', 'buckwheat', 'bulgur', 'cornmeal', 'millet', 'oat', 'quinoa', 'spelt']
+carbs = grain + ['noodles', 'bread', 'tortillas', 'noodle', 'tortilla', 'pasta']
 misc = ['salt', 'black pepper', 'water', 'sugar', 'vinegar', ]
 sauces = ['ketchup', 'mustard', 'soy sauce']
 
@@ -171,10 +219,11 @@ list_of_ingredients = beans_and_legumes + meat_and_poultry + wild_game + chocola
 
 # need to integrate into extract_text
 def parse_ingredients(ingredients):
-    list_ingredient = []
+    dict_ingredient = {}
     for i in ingredients:
-        list_ingredient.append(parse_ingredient(i))
-    return list_ingredient
+        match, lst = parse_ingredient(i)
+        dict_ingredient[match] = lst
+    return dict_ingredient
 
 def parse_ingredient(ingredient):
     # ingredient name
@@ -201,7 +250,14 @@ def parse_ingredient(ingredient):
             quantity += int(t)   
     if quantity == 0:
         quantity = ''  
-    return {match: [quantity, measure, '']}
+    return match, [quantity, measure, '']
+
+# parse_recipe takes a recipe (list of lists) and returns the fully populated ingredient and step dicts
+def parse_recipe(recipe):
+    ingredients = parse_ingredients(recipe[1])
+    steps = parse_steps(recipe[2], ingredients.keys())
+    return ingredients, steps
+
 
 
 # ingredients structure: {ingredient name: [quantity, measurement, descriptors]}
@@ -219,22 +275,38 @@ def parse_ingredient(ingredient):
 
 p = load_page(URL)
 recipe = extract_text(p)
-print(recipe[1])
-print(parse_ingredients(recipe[1]))
-#dummy_ing = {'pasta':[1,'cup',''],'chicken':[2,'breasts','chopped'], 'butter':[1,'tsp','melted'],'sugar':[3,'tsp',''], 'italian dressing':[3,'tsp','']}
-# print(dummy_ing)
-# make_healthy(dummy_ing)
-# print(dummy_ing)
-#recipe = extract_text(URL)
-#parsed_recipe = parse_steps(recipe[2], ['soy sauce','italian-style dressing','chicken','butter','hot pepper sauce'])
-#print(parsed_recipe)
-#make_veg(parsed_recipe)
-#print(parsed_recipe)
-#make_unveg(parsed_recipe)
-#print(parsed_recipe)
+ingredients, steps = parse_recipe(recipe)
 
+# print(steps)
+# make_veg(ingredients, steps)
+# print(ingredients, steps)
+# make_unveg(ingredients, steps)
+# print(ingredients, steps)
 
+def make_human_readable_ingredients(ingredients):
+    print('INGREDIENTS:')
+    for i in ingredients:
+        for x in ingredients[i]:
+            if x!='':
+                print(x, end=" ")
+        print(i)
 
+make_human_readable_ingredients(ingredients)
+
+def make_human_readable_steps(steps):
+    print('STEPS:')
+    for i in steps:
+        print(i)
+        for x in steps[i]:
+            print(x+':')
+            for t in steps[i][x]:
+                print(t)
+            print('\n')
+        print('\n')
+
+make_human_readable_steps(steps)
+
+# print(*range(5), sep=", ")
 
 # VEGETARIAN SUBSTITUTION LOGIC, DO NOT DELETE
 """ for i in recipe[1]:
@@ -246,7 +318,6 @@ print(parse_ingredients(recipe[1]))
             if tokens[j] in MEATS:
                 tokens[j] = 'tofu'
         print(tokens)
-
 for i in recipe[1]:
     if any(protein in i for protein in VEG_PROTEINS):
         print(i, 'PROTEIN')
