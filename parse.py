@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 
 import nltk
-import re
 
 URL = 'https://www.allrecipes.com/recipe/17167/sicilian-spaghetti/'
 URL = 'https://www.allrecipes.com/recipe/279987/'
@@ -277,11 +276,12 @@ p = load_page(URL)
 recipe = extract_text(p)
 ingredients, steps = parse_recipe(recipe)
 
-# print(steps)
-# make_veg(ingredients, steps)
-# print(ingredients, steps)
-# make_unveg(ingredients, steps)
-# print(ingredients, steps)
+
+print(ingredients, steps)
+make_veg(ingredients, steps)
+print(ingredients, steps)
+make_unveg(ingredients, steps)
+print(ingredients, steps)
 
 def make_human_readable_ingredients(ingredients):
     print('INGREDIENTS:')
