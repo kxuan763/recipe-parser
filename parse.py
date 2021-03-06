@@ -276,14 +276,37 @@ p = load_page(URL)
 recipe = extract_text(p)
 ingredients, steps = parse_recipe(recipe)
 
+
 print(ingredients, steps)
 make_veg(ingredients, steps)
 print(ingredients, steps)
 make_unveg(ingredients, steps)
 print(ingredients, steps)
 
+def make_human_readable_ingredients(ingredients):
+    print('INGREDIENTS:')
+    for i in ingredients:
+        for x in ingredients[i]:
+            if x!='':
+                print(x, end=" ")
+        print(i)
 
+make_human_readable_ingredients(ingredients)
 
+def make_human_readable_steps(steps):
+    print('STEPS:')
+    for i in steps:
+        print(i)
+        for x in steps[i]:
+            print(x+':')
+            for t in steps[i][x]:
+                print(t)
+            print('\n')
+        print('\n')
+
+make_human_readable_steps(steps)
+
+# print(*range(5), sep=", ")
 
 # VEGETARIAN SUBSTITUTION LOGIC, DO NOT DELETE
 """ for i in recipe[1]:
@@ -295,7 +318,6 @@ print(ingredients, steps)
             if tokens[j] in MEATS:
                 tokens[j] = 'tofu'
         print(tokens)
-
 for i in recipe[1]:
     if any(protein in i for protein in VEG_PROTEINS):
         print(i, 'PROTEIN')
