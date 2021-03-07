@@ -2,9 +2,7 @@
 Project 2: Recipe Parser &amp; Interactive Cookbook
 
 dependencies:
-pip install requests
-pip install nltk
-pip install bs4
+pip install -r requirements.txt
 
 
 run 
