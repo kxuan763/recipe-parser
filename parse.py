@@ -73,7 +73,7 @@ ALL_TOOLS = ['grill', 'whisk', 'pot', 'pan', 'dish', 'grater', 'knife', 'board',
 SPEC_TOOLS = ['dish', 'pan', 'pin', 'sheet', 'iron', 'board']
 TOOL_PREF = ['baking', 'cookie', 'rolling', 'waffle', 'cutting']
 # Methods
-ALL_METHODS = ['refrigerate', 'toss', 'sprinkle', 'whisk', 'press', 'bake', 'saute', 'preheat', 'fry', 'boil', 'broil', 'chop', 'cut', 'mash', 'blend', 'tenderize', 'heat', 'preheat']
+ALL_METHODS = ['refrigerate', 'toss', 'sprinkle', 'whisk', 'press', 'bake', 'saute', 'preheat', 'fry', 'boil', 'broil', 'chop', 'cut', 'mash', 'blend', 'tenderize', 'heat', 'preheat', 'chop', 'grate', 'stir', 'shake', 'mince', 'crush', 'squeeze']
 # Times
 TIME_WORDS = ['minute', 'minutes', 'second', 'seconds', 'hour', 'hours']
 # For vegetarian transformations
